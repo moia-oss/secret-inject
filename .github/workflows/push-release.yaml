@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./bin/secret-inject-linux-amd64
           asset_name: secret-inject-linux-amd64
           asset_content_type: application/x-binary
