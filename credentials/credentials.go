@@ -80,10 +80,10 @@ func randomNonce() (*[NonceLen]byte, error) {
 	return &nonce, nil
 }
 
-func EncryptedSetFromSet(set Set, peerPubKey *[KeyLen]byte) (EncryptedSet, error) {
-	marshaledSet, err := yaml.Marshal(&set)
+func (s Set) Encrypt(peerPubKey *[KeyLen]byte) (EncryptedSet, error) {
+	marshaledSet, err := yaml.Marshal(&s)
 	if err != nil {
-		return EncryptedSet{}, fmt.Errorf("failed to encode credential set as YAML: %w", err)
+		return EncryptedSet{}, fmt.Errorf("failed to encode credential s as YAML: %w", err)
 	}
 
 	pubKey, privKey, err := box.GenerateKey(rand.Reader)
@@ -106,18 +106,18 @@ func EncryptedSetFromSet(set Set, peerPubKey *[KeyLen]byte) (EncryptedSet, error
 	}, nil
 }
 
-func SetFromEncryptedSet(encrSet EncryptedSet, privKey *[KeyLen]byte) (Set, error) {
-	decodedCiphertext, err := base64.StdEncoding.DecodeString(encrSet.EncryptedCredentialSet)
+func (es EncryptedSet) Decrypt(privKey *[KeyLen]byte) (Set, error) {
+	decodedCiphertext, err := base64.StdEncoding.DecodeString(es.EncryptedCredentialSet)
 	if err != nil {
 		return Set{}, fmt.Errorf("failed to decode base64 encoded encrypted credential set: %w", err)
 	}
 
-	decodedPeerPubKey, err := base64.StdEncoding.DecodeString(encrSet.PublicKey)
+	decodedPeerPubKey, err := base64.StdEncoding.DecodeString(es.PublicKey)
 	if err != nil {
 		return Set{}, fmt.Errorf("failed to decode base64 encoded public key: %w", err)
 	}
 
-	decodedNonce, err := base64.StdEncoding.DecodeString(encrSet.Nonce)
+	decodedNonce, err := base64.StdEncoding.DecodeString(es.Nonce)
 	if err != nil {
 		return Set{}, fmt.Errorf("failed to decode base64 encoded nonce: %w", err)
 	}

@@ -35,10 +35,10 @@ func TestCredentialsCryptoFlow(t *testing.T) {
 		}},
 	}
 
-	encrSet, err := EncryptedSetFromSet(originalSet, pubKey)
+	encrSet, err := originalSet.Encrypt(pubKey)
 	require.NoError(t, err)
 
-	decryptedSet, err := SetFromEncryptedSet(encrSet, privateKey)
+	decryptedSet, err := encrSet.Decrypt(privateKey)
 	require.NoError(t, err)
 
 	assert.Equal(t, originalSet, decryptedSet)

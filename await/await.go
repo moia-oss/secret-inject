@@ -75,7 +75,7 @@ func (h *Handler) decodeAndDecryptCredentials(s3Obj []byte) (credentials.Set, er
 		return credentials.Set{}, fmt.Errorf("failed to unmarshal encrypted credential set YAML: %w", err)
 	}
 
-	credSet, err := credentials.SetFromEncryptedSet(encryptedSet, h.privateKey)
+	credSet, err := encryptedSet.Decrypt(h.privateKey)
 	if err != nil {
 		return credentials.Set{}, err
 	}

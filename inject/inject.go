@@ -89,7 +89,7 @@ func (h *Handler) Inject(encodedPubKey string) error {
 		return fmt.Errorf("failed to parse public key from s3 key: %w", err)
 	}
 
-	encryptedSet, err := credentials.EncryptedSetFromSet(credsSet, pubKey)
+	encryptedSet, err := credsSet.Encrypt(pubKey)
 	if err != nil {
 		return err
 	}
