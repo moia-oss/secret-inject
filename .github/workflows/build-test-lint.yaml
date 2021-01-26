@@ -1,0 +1,26 @@
+name: build-test-lint
+on: push
+
+jobs:
+  build-test-lint:
+    # Name the Job
+    name: Build, test, and lint
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: build
+        run: make build
+      - name: integration-test
+        run: make integration-test
+      - name: lint
+        run: make lint
+
+    services:
+      localstack:
+        image: localstack/localstack
+        ports:
+          - 4566:4566
