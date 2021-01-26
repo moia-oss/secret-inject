@@ -93,14 +93,27 @@ By default, `secret-inject` expects the config file to be placed in the root of 
 
 ### Installation on developer workstation and in the CI/CD system 
 
-The tool is a static binary (the program is written in Go) and can be distributed easily. More information is to be added here soon.
+The tool is a static binary (the program is written in Go) and can be distributed easily.
+
+To install the tool on your workstation just download the [latest release](https://github.com/moia-oss/secret-inject/releases) for your system. Put the binary in a folder which is part of your path, e.g. `/usr/bin/local`.
+
+In the pipeline the recommended way is to use the following two-liner in your deploy script (assuming that you use Linux in the CI system).
+
+```
+curl --silent --location --output ./secret-inject $(curl --silent $(curl --silent https://api.github.com/repos/moia-oss/secret-inject/releases/latest | jq -r '.assets_url') | jq -r '.[] | select (.name | contains("linux")) | .browser_download_url')
+chmod u+x ./secret-inject
+```
+
+This downloads the latest version of the tool to the current directory. Just execute it from the local path, i.e. using `./secret-inject ...`. 
+
+`secret-inject` is agnostic towards the specific CI system being used (though it includes some convenience functions for GitHub actions).
 
 ### Awaiting and injecting the credentials
 
 In the CI workflow the await command might simply look like this:
 
 ```
-secret-inject await
+./secret-inject await
 ```
 
 This will prompt the developer to inject the credentials (and optionally cause a GitHub notification).
