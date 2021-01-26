@@ -83,7 +83,7 @@ func randomNonce() (*[NonceLen]byte, error) {
 func (s Set) Encrypt(peerPubKey *[KeyLen]byte) (EncryptedSet, error) {
 	marshaledSet, err := yaml.Marshal(&s)
 	if err != nil {
-		return EncryptedSet{}, fmt.Errorf("failed to encode credential s as YAML: %w", err)
+		return EncryptedSet{}, fmt.Errorf("failed to encode credential set as YAML: %w", err)
 	}
 
 	pubKey, privKey, err := box.GenerateKey(rand.Reader)
